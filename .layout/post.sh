@@ -22,7 +22,7 @@ cat << _EOF_
         @media (min-width: 760px) { body { font-size: 15px } }
         @media (min-width: 1367px) { body { font-size: 16px } }
         article { padding: 0; margin: 1em 0; max-width: 860px; }
-        article a { color: #b58900; }
+        article a { color: #cd3700; }
         article img { max-width: 100% }
         article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
         article blockquote,
@@ -56,6 +56,10 @@ cat << _EOF_
         .wrap { max-width: 1024px; margin: 0 auto; }
         figure { margin: 0 }
         .hljs { background-color: #fbfbfb; }
+        table { border-collapse: collapse; }
+        table thead tr th { border-bottom: 2px solid #999; }
+        table tr td { padding: 0 .3em; border-bottom: 1px solid #CCC; }
+        table tr td + td { border-left: 1px solid #CCC; }
       </style>
     </head>
     <body>
