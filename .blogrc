@@ -1,0 +1,5 @@
+POSTS_PER_PAGE=20
+DIST=./.dist
+LAYOUT_DIR=./.layout
+STATIC_DIRS="static images"     
+MARKDOWN_COMMAND="multimarkdown "
