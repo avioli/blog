@@ -3,3 +3,7 @@ DIST=./.dist
 LAYOUT_DIR=./.layout
 STATIC_DIRS="static images"     
 MARKDOWN_COMMAND="multimarkdown "
+
+export LINK_PREFIX=/blog
+export FEED_TITLE="Avioli's blog"
+export FEED_HOSTNAME=https://avioli.github.io/blog
