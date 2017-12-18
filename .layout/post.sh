@@ -23,6 +23,7 @@ cat << _EOF_
         @media (min-width: 1367px) { body { font-size: 16px } }
         article { padding: 0; margin: 1em 0; max-width: 860px; }
         article a { color: #cd3700; }
+        article a:visited { color: #8b2500; }
         article img { max-width: 100% }
         article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
         article blockquote,

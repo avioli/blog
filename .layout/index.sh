@@ -60,6 +60,7 @@ cat << _EOF_
       .post-link .title:hover {  text-decoration: underline;  }
       .post-link .stamp { color: #999; display: table-cell; width: 2.25em; text-align:right; padding-right: 1.5em; }
       .post-link .title { color: #333; display: table-cell; vertical-align: top;font-weight: bold; }
+      .post-link :visited .title { color: #999; }
       nav a { color: #555; text-decoration: none; } nav a:hover { color: #268bd2}
       nav a+a:before { content: ' • '; }
       header { text-transform: uppercase; }
