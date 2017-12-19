@@ -1,6 +1,6 @@
 # UI Frameworks
 
-Here is a list of frameworks, that either have full CSS + JS sweet of modules
+Here is a list of frameworks, that either have full CSS + JS suite of modules
 (or blocks) or are just CSS-only.
 
 | Type | Name                | URL                                                       | Notes               |
