@@ -66,10 +66,10 @@ cat << _EOF_
     <body>
       <div class="wrap">
         <article>
-        <div class="heading"><a href="$(echo LINK_PREFIX)$(echo $POST_URL)"><span class="stamp">$(echo $POST_DATE)</span><h1 class="title">$(echo $POST_TITLE)</h1></a></div>
-          <a href="$(echo LINK_PREFIX)/" class="home">←</a><div class="contents">
+        <div class="heading"><a href="$(echo $LINK_PREFIX)$(echo $POST_URL)"><span class="stamp">$(echo $POST_DATE)</span><h1 class="title">$(echo $POST_TITLE)</h1></a></div>
+          <a href="$(echo $LINK_PREFIX)/" class="home">←</a><div class="contents">
           $(echo "$POST_CONTENTS")
-          <div class="tags">$(for i in $TAGS; do echo "<a href=\"$(echo LINK_PREFIX)/tag/$i\">$i</a>"; done;)</div>
+          <div class="tags">$(for i in $TAGS; do echo "<a href=\"$(echo $LINK_PREFIX)/tag/$i\">$i</a>"; done;)</div>
           </div>
         </article>
       </div>
