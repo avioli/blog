@@ -14,7 +14,7 @@ Also made me think and experiment with html5 videos:
 
 On Mac OS with [homebrew](https://brew.sh) it is as easy as:
 
-```
+```shell
 brew install ffmpeg --with-tools --with-libvpx
 
 # or with more stuff:
@@ -27,7 +27,7 @@ On any other platform (that I do not use) try to follow the [official compilatio
 
 In my case the input file had only video stream, so I didn't care about any audio.
 
-```
+```shell
 ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 FILENAME-720-24fps-1828k.mp4
 ```
 
@@ -35,12 +35,12 @@ ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720'
 
 Fading out involves the exact frame from which to begin:
 
-```
+```shell
 ffprobe -i FILENAME.mov -count_frames -show_entries stream=nb_frames
 # nb_frames=1728 (in my case)
 ```
 
-```
+```shell
 ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720,fade=in:0:10,fade=out:1718:10' -r 24 -preset fast -threads 0 FILENAME-720-24fps-1828k-fadeinout.mp4
 ```
 
@@ -48,7 +48,7 @@ ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720,
 
 I followed the details from the page about [VP8 encoding](https://trac.ffmpeg.org/wiki/Encode/VP8).
 
-```
+```shell
 ffmpeg -y -i FILENAME.mov -c:v libvpx -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 -pass 1 FILENAME-720-24fps-1828k.webm
 ffmpeg -y -i FILENAME.mov -c:v libvpx -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 -pass 2 FILENAME-720-24fps-1828k.webm
 ```
@@ -61,13 +61,15 @@ I followed the details from the page [High Quality GIF with FFmpeg](http://blog.
 
 To keep the output small I decided to go with 320px in width and 10 fps.
 
-```
+```shell
 ffmpeg -i FILENAME.mov -vf 'scale=320:-1:sws_dither=ed' -gifflags -transdiff -r 10 -y FILENAME-320-10fps-dither.gif
 ```
 
 An alternative suggestion was to create a palette first from all frames and use that when encoding the GIF. Apparently you can add the fps setting into the `-vf` flag.
 
-```
+```shell
 ffmpeg -i FILENAME.mov -vf 'fps=10,scale=320:-1:flags=lanczos,palettegen' -y palette.png
 ffmpeg -i FILENAME.mov -i palette.png -lavfi 'fps=10,scale=320:-1:flags=lanczos [x]; [x][1:v] paletteuse' -y FILENAME-320-10fps-long-palette.gif
 ```
+
+Tags: TIL CLI Web
