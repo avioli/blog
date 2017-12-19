@@ -2,11 +2,11 @@
 
 Today I found an amazing book/article by Addy Osmani - [Essential Image Optimizations](https://images.guide)
 
-It talks image optimisation on the web.
+It talks about image optimisation on the web in great detail.
 
 TIL about: [Guetzli](https://github.com/google/guetzli) - a slow perceptual JPEG encoder from Google.
 
-It made me consider again WebP as an alternative for supported browsers, which I should add to may workflow.
+It made me consider again WebP as an alternative for supported browsers, which I should add to my workflow.
 
 Also made me think and experiment with html5 videos:
 
