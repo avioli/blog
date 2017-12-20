@@ -17,7 +17,7 @@ On Mac OS with [homebrew](https://brew.sh) it is as easy as:
 ```shell
 brew install ffmpeg --with-tools --with-libvpx
 
-# or with more stuff:
+## or with more stuff:
 brew install ffmpeg --with-ffplay --with-tools --with-x265 --with-faac --with-fdk-aac --with-libvpx --with-libvorbis
 ```
 
@@ -37,7 +37,7 @@ Fading out involves the exact frame from which to begin:
 
 ```shell
 ffprobe -i FILENAME.mov -count_frames -show_entries stream=nb_frames
-# nb_frames=1728 (in my case)
+## nb_frames=1728 (in my case)
 ```
 
 ```shell
