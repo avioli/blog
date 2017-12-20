@@ -3,7 +3,7 @@ DIST=./.dist
 LAYOUT_DIR=./.layout
 STATIC_DIRS="static images"     
 MARKDOWN_COMMAND="multimarkdown "
-BLOG_TITLE="Avioli's den"
+BLOG_TITLE="Avioli&apos;s den"
 
 export LINK_PREFIX=/blog
 export FEED_TITLE="Avioli's blog"
