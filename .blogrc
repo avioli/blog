@@ -2,7 +2,7 @@ POSTS_PER_PAGE=20
 DIST=./.dist
 LAYOUT_DIR=./.layout
 # STATIC_DIRS="static images"     
-STATIC_DIRS="CNAME"
+# STATIC_DIRS="CNAME"
 MARKDOWN_COMMAND="multimarkdown "
 BLOG_TITLE="Avioli's den"
 
