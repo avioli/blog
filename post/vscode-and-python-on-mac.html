@@ -1,0 +1,98 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <title>VSCode and Python on Mac - Avioli's den</title>
+      <link href="https://fonts.googleapis.com/css?family=Overpass+Mono:400,700" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/arduino-light.min.css" rel="stylesheet">
+      <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAANjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARERERAAAAAAAAAAAAAAAAEQEBEQAAAAAAAAAAAAAAABEREREAAAAAAAAAAAAAAAARAREBAAAAAAAAAAAAAAAAEREBEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AADwDwAA//8AAPKPAAD//wAA8A8AAP//AADyLwAA//8AAPCPAAD//wAA//8AAP//AAD//wAA" rel="icon" type="image/x-icon">
+      <style>
+        body {
+          background-color: white;
+          color: #222;
+          font-size: 14px;
+          padding: 1em;
+          font-family: 'Overpass Mono', sans-serif;
+          line-height: 1.5em;
+        }
+        @media (min-width: 760px) { body { font-size: 15px } }
+        @media (min-width: 1367px) { body { font-size: 16px } }
+        article { padding: 0; margin: 1em 0; max-width: 860px; }
+        article a { color: #cd3700; }
+        article a:visited { color: #8b2500; }
+        article img { max-width: 100% }
+        article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
+        article blockquote,
+        article pre { margin: 0; border-bottom: 1px solid #DDD; }
+        article pre,
+        article code { background-color: #f4f4f4; border-radius: 3px; font-family: 'Overpass Mono'; font-size: 14px; display: inline-block; color: #333; }
+        article pre { word-break: break-all; width: 100%; }
+        article blockquote :first-of-type { margin-top: 0; }
+        article blockquote :last-of-type { margin-bottom: 0; }
+        article hr { border: 0; border-bottom: 3px solid #CCC; }
+        .heading { font-family: 'Overpass Mono'; }
+        .heading a { text-decoration: none; }
+        .heading .title { max-width: 600px; font-size: 1.4em; color: #222; display: inline-block; text-transform: uppercase; margin: 0 0 1em; font-weight:bold; line-height:1.25em  }
+        .heading .title:hover { text-decoration: underline; }
+        .heading .stamp { color: #999; }
+        .heading .stamp,
+        .home { display: inline-block; width: 2.66em; text-align:right; margin-right: 1.5em; }
+        .home { text-decoration: none; margin-bottom: 1.5em; text-align: left;  color: #cb4b16; } .home:hover { color: #dc322f; }
+        .contents { display: inline-block; max-width: 79ch; vertical-align: top; width: 100%; }
+        .contents :first-child { margin-top: 0; }
+        h1, h2, h3, h4, h5, h6 { font-size: 1.4em; font-weight: bold; text-transform: uppercase; margin: 2em 0 1em; }
+        h3, h4, h5, h6 { font-size: 1.25em; }
+        h4, h5, h6 { font-size: 1em; }
+        ol, ul { padding-left: 1em; }
+        .footnotes { padding: 1em 0 0; font-size: .9em; }
+        .footnotes hr { display: none; }
+        .footnotes ol { padding: 0; }
+        .footnote { vertical-align: super; font-size: .8em; text-decoration: none; line-height: 0; }
+        .tags { border-top: 2px solid #EEE; margin-top: 2.5em; padding-top: 1.5em; font-size: .9em; }
+        .tags a { background-color: #EEE; display:inline-block;padding: 0 .5em;border-radius: 4px; }
+        .wrap { max-width: 1024px; margin: 0 auto; }
+        figure { margin: 0 }
+        .hljs { background-color: #fbfbfb; }
+        table { border-collapse: collapse; }
+        table thead tr th { border-bottom: 2px solid #999; }
+        table tr td { padding: 0 .3em; border-bottom: 1px solid #CCC; }
+        table tr td + td { border-left: 1px solid #CCC; }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <article>
+        <div class="heading"><a href="/blog/post/vscode-and-python-on-mac.html"><span class="stamp">04/15</span><h1 class="title">VSCode and Python on Mac</h1></a></div>
+          <a href="/blog/" class="home">←</a><div class="contents">
+          
+
+<p>Apparently Python development setup in <a href="https://code.visualstudio.com">VSCode</a> on a Mac could be very
+easy, but also very complex.</p>
+
+<p>I&#8217;ve decided to run <a href="https://docs.pipenv.org">pipenv</a> as a package/environment manager, which
+should be supported by <a href="https://code.visualstudio.com">VSCode</a> out of the box. It is and it isn&#8217;t.</p>
+
+<p>Apparently something in the chain of detection uses <a href="http://click.pocoo.org/5/python3/">Click</a>, which has
+an issue when your <code>LC_ALL</code> and <code>LANG</code> are not set. In my case <code>LC_ALL</code> was
+blank, and my <code>LANG</code> was set to <code>en_AU.utf-8</code>.</p>
+
+<p>I had to add to my <code>~/.bash_profile</code>:</p>
+
+<pre><code>export LANG=en_AU.utf-8 # manually added, just to be sure
+export LC_ALL=$LANG
+</code></pre>
+
+<p>Then once I restarted <a href="https://code.visualstudio.com">VSCode</a> it found my <a href="https://docs.pipenv.org">pipenv</a> interpreter
+and all was fine.</p>
+
+<p>Tags: VSCode Python</p>
+          <div class="tags"><a href="/blog/tag/VSCode">VSCode</a>
+<a href="/blog/tag/Python">Python</a></div>
+          </div>
+        </article>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+  </html>

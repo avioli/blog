@@ -1,0 +1,488 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <title>Catching failing Futures in Dart - Avioli's den</title>
+      <link href="https://fonts.googleapis.com/css?family=Overpass+Mono:400,700" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/arduino-light.min.css" rel="stylesheet">
+      <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAANjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARERERAAAAAAAAAAAAAAAAEQEBEQAAAAAAAAAAAAAAABEREREAAAAAAAAAAAAAAAARAREBAAAAAAAAAAAAAAAAEREBEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AADwDwAA//8AAPKPAAD//wAA8A8AAP//AADyLwAA//8AAPCPAAD//wAA//8AAP//AAD//wAA" rel="icon" type="image/x-icon">
+      <style>
+        body {
+          background-color: white;
+          color: #222;
+          font-size: 14px;
+          padding: 1em;
+          font-family: 'Overpass Mono', sans-serif;
+          line-height: 1.5em;
+        }
+        @media (min-width: 760px) { body { font-size: 15px } }
+        @media (min-width: 1367px) { body { font-size: 16px } }
+        article { padding: 0; margin: 1em 0; max-width: 860px; }
+        article a { color: #cd3700; }
+        article a:visited { color: #8b2500; }
+        article img { max-width: 100% }
+        article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
+        article blockquote,
+        article pre { margin: 0; border-bottom: 1px solid #DDD; }
+        article pre,
+        article code { background-color: #f4f4f4; border-radius: 3px; font-family: 'Overpass Mono'; font-size: 14px; display: inline-block; color: #333; }
+        article pre { word-break: break-all; width: 100%; }
+        article blockquote :first-of-type { margin-top: 0; }
+        article blockquote :last-of-type { margin-bottom: 0; }
+        article hr { border: 0; border-bottom: 3px solid #CCC; }
+        .heading { font-family: 'Overpass Mono'; }
+        .heading a { text-decoration: none; }
+        .heading .title { max-width: 600px; font-size: 1.4em; color: #222; display: inline-block; text-transform: uppercase; margin: 0 0 1em; font-weight:bold; line-height:1.25em  }
+        .heading .title:hover { text-decoration: underline; }
+        .heading .stamp { color: #999; }
+        .heading .stamp,
+        .home { display: inline-block; width: 2.66em; text-align:right; margin-right: 1.5em; }
+        .home { text-decoration: none; margin-bottom: 1.5em; text-align: left;  color: #cb4b16; } .home:hover { color: #dc322f; }
+        .contents { display: inline-block; max-width: 79ch; vertical-align: top; width: 100%; }
+        .contents :first-child { margin-top: 0; }
+        h1, h2, h3, h4, h5, h6 { font-size: 1.4em; font-weight: bold; text-transform: uppercase; margin: 2em 0 1em; }
+        h3, h4, h5, h6 { font-size: 1.25em; }
+        h4, h5, h6 { font-size: 1em; }
+        ol, ul { padding-left: 1em; }
+        .footnotes { padding: 1em 0 0; font-size: .9em; }
+        .footnotes hr { display: none; }
+        .footnotes ol { padding: 0; }
+        .footnote { vertical-align: super; font-size: .8em; text-decoration: none; line-height: 0; }
+        .tags { border-top: 2px solid #EEE; margin-top: 2.5em; padding-top: 1.5em; font-size: .9em; }
+        .tags a { background-color: #EEE; display:inline-block;padding: 0 .5em;border-radius: 4px; }
+        .wrap { max-width: 1024px; margin: 0 auto; }
+        figure { margin: 0 }
+        .hljs { background-color: #fbfbfb; }
+        table { border-collapse: collapse; }
+        table thead tr th { border-bottom: 2px solid #999; }
+        table tr td { padding: 0 .3em; border-bottom: 1px solid #CCC; }
+        table tr td + td { border-left: 1px solid #CCC; }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <article>
+        <div class="heading"><a href="/blog/post/catching-failing-futures-in-dart.html"><span class="stamp">03/13</span><h1 class="title">Catching failing Futures in Dart</h1></a></div>
+          <a href="/blog/" class="home">←</a><div class="contents">
+          
+
+<p>You cannot catch a <a href="https://api.dartlang.org/stable/1.24.3/dart-async/Future-class.html">Future</a> computation error, if it is not attached to
+the Future itself, within the same event-loop cycle, or given enough time for
+the catch handler to be set.</p>
+
+<p>When I renewed exploring <a href="https://www.dartlang.org">Dart</a>, because of <a href="https://flutter.io">Flutter</a>, I really
+wanted to use a <a href="https://docs.flutter.io/flutter/widgets/FutureBuilder-class.html">FutureBuilder</a>, which works with a Future.</p>
+
+<p>A <em>very</em> simplistic representation of the problem:</p>
+
+<pre><code class="dart">// main.dart
+import 'dart:async';
+
+Future asyncFunc() async {
+  // Simulate a future computation exception.
+  // This could be any exception.
+  throw new FormatException('thrown-error');
+}
+
+void main() {
+  var future;
+  // A try/catch is useless, but still...
+  try {
+    future = asyncFunc();
+  } catch (e) {
+    print('caught???'); // Nope!
+  }
+
+  Timer.run(() {
+    // This will be scheduled after the asyncFunc is fired, thus missing
+    // the opportunity to attach the catchError callback.
+
+    future.catchError((error) {
+      print('Caught error: $error'); // Nope!
+    });
+
+    // If there is more work that will keep the app from exiting,
+    // this will eventually get attached and run.
+  });
+}
+</code></pre>
+
+<p>After running above you get:</p>
+
+<pre><code class="bash">bash$ dart main.dart
+Unhandled exception:
+FormatException: thrown-error
+# ... stack-trace follows
+</code></pre>
+
+<p>One of the ways to catch it is, if there is enough other delays within
+<code>asyncFunc</code> to allow the <code>catchError</code> to be attached, before it throws:</p>
+
+<pre><code class="dart">// main.dart
+...
+// Works in this edge-case
+Future asyncFunc() async {
+  // Simulate some async work - like an HttpClientRequest
+  await new Future.delayed(const Duration(milliseconds: 100));
+
+  // Simulate a future computation error
+  throw new FormatException('thrown-error');
+}
+...
+</code></pre>
+
+<p>But what if the <code>catchError</code> gets attached just &#8220;later&#8221;?</p>
+
+<pre><code class="dart">// main.dart
+...
+  new Timer(const Duration(milliseconds: 200), () {
+    future.catchError((error) {
+      print('Caught error: $error'); // Nope!
+    });
+  });
+...
+</code></pre>
+
+<p>This is how Flutter&#8217;s SDK works - you create a new <a href="https://api.dartlang.org/stable/1.24.3/dart-async/Future-class.html">Future</a> in
+<code>initState</code> or a <code>setState</code> call, then use a <a href="https://docs.flutter.io/flutter/widgets/FutureBuilder-class.html">FutureBuilder</a> to
+handle it and provide user feedback. The only problem is that there is a delay
+between the state change and the builder adding the <code>catchError</code> handler.</p>
+
+<h2 id="fluttersfuturebuilder">Flutter&#8217;s FutureBuilder</h2>
+
+<p>Here is a snippet of code for a Flutter <code>StatefulWidget</code>.</p>
+
+<p>The important pieces are the <code>_futureBuilder()</code>, <code>_startAsync()</code> and
+<code>asyncFunc()</code>.</p>
+
+<pre><code class="dart">// lib/main.dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(new App());
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      home: new HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() =&gt; new _HomePageState();
+}
+
+class _HomePageState extends State&lt;HomePage&gt; {
+  Future&lt;String&gt; _future; // Starts as null
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: new Center(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: &lt;Widget&gt;[
+            _futureBuilder(),
+            _button(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _futureBuilder() {
+    return new FutureBuilder&lt;String&gt;(
+      future: _future, // a Future&lt;String&gt; or null
+      builder: (BuildContext context, AsyncSnapshot&lt;String&gt; snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Text('Press button to start');
+          case ConnectionState.waiting:
+            return const Text('Awaiting result...');
+          default:
+            if (snapshot.hasError)
+              return new Text('Error: ${snapshot.error}');
+            else
+              return new Text('Result: ${snapshot.data}');
+        }
+      },
+    );
+  }
+
+  Widget _button() {
+    return new RaisedButton(
+      child: const Text('ASYNC ACTION'),
+      onPressed: _startAsync,
+    );
+  }
+
+  void _startAsync() {
+    setState(() {
+      // _future = asyncFunc(); // Won't throw;
+      _future = asyncFunc(something: true); // Will throw
+    });
+  }
+}
+
+Future&lt;String&gt; asyncFunc({bool something}) async {
+  if (something == true) {
+    throw new FormatException('thrown-error');
+  }
+
+  final dur = const Duration(seconds: 2);
+  return new Future.delayed(dur, () =&gt; 'done');
+  // return new Future.delayed(dur, () =&gt; new Future.error('async-error'));
+}
+</code></pre>
+
+<p>Now, if <code>asyncFunc()</code> throws, within the same event-loop cycle, before the SDK
+(<a href="https://docs.flutter.io/flutter/widgets/FutureBuilder-class.html">FutureBuilder</a> in particular) internal machine attaches a
+<code>catchError</code> to the Future - you get an Unhandled exception!</p>
+
+<p>The <a href="https://docs.flutter.io/flutter/widgets/FutureBuilder-class.html">FutureBuilder</a> will eventually show that an error
+occurred, but there will be this unhandled exception log.</p>
+
+<p>For some people this is fine.</p>
+
+<p>You can attach a <code>catchError</code> yourself, but then the
+<a href="https://docs.flutter.io/flutter/widgets/FutureBuilder-class.html">FutureBuilder</a> won&#8217;t get the error state&#8230; ever. It will only
+get a <code>null</code> in <code>snapshot.data</code>.</p>
+
+<pre><code class="dart">// lib/main.dart
+...
+  void _startAsync() {
+    setState(() {
+      _future = asyncFunc(something: true).catchError((err) {
+        // do something with err
+        print(err);
+      });
+    });
+  }
+...
+</code></pre>
+
+<p>What to do?</p>
+
+<p>Don&#8217;t get me wrong - that unhandled exception is something that you can guard
+against (and should), since it is a parameter sent to the async function, that
+causes it to throw.</p>
+
+<p>A release build won&#8217;t crash the app. It will simply get logged:</p>
+
+<pre><code class="bash">#...
+[VERBOSE-2:dart_error.cc(16)] Unhandled exception:
+</code></pre>
+
+<h2 id="mysolutions">My solutions</h2>
+
+<h3 id="thesimpleone">The simple one</h3>
+
+<pre><code class="dart">// lib/main.dart
+...
+  void _startAsync() {
+    setState(() {
+      _future = asyncFunc(something: true)
+      _future.catchError((err) {
+        // do something with err
+        print(err);
+      });
+    });
+  }
+...
+</code></pre>
+
+<p>Just log it yourself? Silly.</p>
+
+<h3 id="hoisttheerroroutofthefuture">Hoist the error out of the future</h3>
+
+<p>Add yet another prop - to hold the caught error. Actually - any error the Future results with.</p>
+
+<pre><code class="dart">// lib/main.dart
+...
+class _HomePageState extends State&lt;HomePage&gt; {
+  Future _future; // Starts as null
+  Object _lastError; // Starts as null
+
+  ...
+
+  Widget _futureBuilder() {
+    return new FutureBuilder&lt;String&gt;(
+      future: _future, // a Future&lt;String&gt; or null
+      builder: (BuildContext context, AsyncSnapshot&lt;String&gt; snapshot) {
+        // check if _lastError is set since snapshot.error won't get set
+        if (_lastError != null) {
+          return new Text('Last Error: $_lastError');
+        }
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Text('Press button to start');
+          case ConnectionState.waiting:
+            return const Text('Awaiting result...');
+          default:
+            // `snapshot.error` will never get set!
+            // if (snapshot.hasError)
+            //  return new Text('Error: ${snapshot.error}');
+            return new Text('Result: ${snapshot.data}');
+        }
+      },
+    );
+  }
+
+  ...
+
+  void _startAsync() {
+    setState(() {
+      _lastError = null;
+
+      _future = asyncFunc().catchError((err) {
+        // Note - this will be set outside of setState,
+        // but the build() call won't have ran yet.
+        _lastError = err;
+      });
+    });
+  }
+...
+</code></pre>
+
+<h3 id="simplydontusefuturebuilder">Simply don&#8217;t use FutureBuilder</h3>
+
+<p>Use props for the state and the result (or for the error and the result).</p>
+
+<p>Not great, but whatever.</p>
+
+<pre><code class="dart">// lib/main.dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(new App());
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      home: new HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() =&gt; new _HomePageState();
+}
+
+class _HomePageState extends State&lt;HomePage&gt; {
+  String _futureState;
+  String _futureResult;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: new Center(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: &lt;Widget&gt;[
+            _resultWidget(),
+            _button(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _resultWidget() {
+    if (_futureState != null) {
+      return new Text(_futureState);
+    }
+
+    if (_futureResult == null) {
+      return const Text('Press button to start');
+    }
+
+    return new Text('Result: $_futureResult');
+  }
+
+  Widget _button() {
+    return new RaisedButton(
+      child: const Text('ASYNC ACTION'),
+      onPressed: _startAsync,
+    );
+  }
+
+  Future _startAsync() async {
+    setState(() {
+      _futureState = 'Awaiting result...';
+      _futureResult = null;
+    });
+
+    try {
+      String result = await asyncFunc(something: true);
+      setState(() {
+        _futureState = null;
+        _futureResult = result;
+      });
+    } catch (err) {
+      setState(() {
+        _futureState = 'Error: $err';
+      });
+    }
+  }
+}
+
+Future&lt;String&gt; asyncFunc({bool something}) async {
+  if (something == true) {
+    throw new FormatException('thrown-error');
+  }
+
+  final dur = const Duration(seconds: 2);
+  return new Future.delayed(dur, () =&gt; 'done');
+  // return new Future.delayed(dur, () =&gt; new Future.error('async-error'));
+}
+</code></pre>
+
+<h2 id="runzoned">runZoned</h2>
+
+<p>I want to mention <a href="https://api.dartlang.org/stable/1.24.3/dart-async/runZoned.html">runZoned</a>, since it could be used to capture
+unhandled exceptions, but it is not end-user-friendly and all I could think of
+is to log unhandled errors for analysis.</p>
+
+<pre><code class="dart">// lib/main.dart
+...
+import 'dart:async';
+
+void main() {
+  runZoned(() {
+    runApp(new App());
+  }, onError: (error) {
+    // The triple mights:
+    //  - The app is in a state, where it might have crashed.
+    //  - Recovery might not be possible.
+    //  - But there might be an upcoming catchError.
+
+    // Log the error so a following app-run can submit it for you to analyse.
+
+    // Ensure you don't cause other, unwanted, exceptions at this point!
+
+    // Finally - re-throw the error so any catchError that will get attached
+    // later can act upon it.
+    throw error;
+  });
+}
+...
+</code></pre>
+
+<p>I&#8217;m open for discussion <a href="https://twitter.com/avioli">on Twitter</a>.</p>
+
+<p>Tags: Dart Flutter</p>
+          <div class="tags"><a href="/blog/tag/Dart">Dart</a>
+<a href="/blog/tag/Flutter">Flutter</a></div>
+          </div>
+        </article>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+  </html>

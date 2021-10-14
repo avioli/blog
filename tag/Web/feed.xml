@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<rss version="2.0">
+<channel>
+  <title>Avioli's blog</title>
+  <link>https://avioli.github.io/blog</link>
+  <description></description>
+
+	<item>
+	<title>FFmpeg for web videos</title>
+	<link>https://avioli.github.io/blog/post/ffmpeg-for-web-videos.html</link>
+	<description></description>
+	<pubDate>Tue, 19 Dec 2017 00:00:00 +1100</pubDate>
+</item>
+
+</channel>
+</rss>

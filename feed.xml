@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<rss version="2.0">
+<channel>
+  <title>Avioli's blog</title>
+  <link>https://avioli.github.io/blog</link>
+  <description></description>
+
+	<item>
+	<title>Let&#8217;s try again</title>
+	<link>https://avioli.github.io/blog/post/lets-try-again.html</link>
+	<description></description>
+	<pubDate>Thu, 14 Oct 2021 00:00:00 +1100</pubDate>
+</item>
+<item>
+	<title>VSCode and Python on Mac</title>
+	<link>https://avioli.github.io/blog/post/vscode-and-python-on-mac.html</link>
+	<description></description>
+	<pubDate>Sun, 15 Apr 2018 00:00:00 +1000</pubDate>
+</item>
+<item>
+	<title>Catching failing Futures in Dart</title>
+	<link>https://avioli.github.io/blog/post/catching-failing-futures-in-dart.html</link>
+	<description></description>
+	<pubDate>Tue, 13 Mar 2018 00:00:00 +1100</pubDate>
+</item>
+<item>
+	<title>TIL</title>
+	<link>https://avioli.github.io/blog/post/2017_12_21-til.html</link>
+	<description></description>
+	<pubDate>Thu, 21 Dec 2017 00:00:00 +1100</pubDate>
+</item>
+<item>
+	<title>TIL</title>
+	<link>https://avioli.github.io/blog/post/2017_12_20-til.html</link>
+	<description></description>
+	<pubDate>Wed, 20 Dec 2017 00:00:00 +1100</pubDate>
+</item>
+<item>
+	<title>UI Frameworks</title>
+	<link>https://avioli.github.io/blog/post/ui-frameworks.html</link>
+	<description></description>
+	<pubDate>Tue, 19 Dec 2017 00:00:00 +1100</pubDate>
+</item>
+<item>
+	<title>FFmpeg for web videos</title>
+	<link>https://avioli.github.io/blog/post/ffmpeg-for-web-videos.html</link>
+	<description></description>
+	<pubDate>Tue, 19 Dec 2017 00:00:00 +1100</pubDate>
+</item>
+
+</channel>
+</rss>

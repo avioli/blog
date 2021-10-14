@@ -1,0 +1,145 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <title>FFmpeg for web videos - Avioli's den</title>
+      <link href="https://fonts.googleapis.com/css?family=Overpass+Mono:400,700" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/arduino-light.min.css" rel="stylesheet">
+      <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAANjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARERERAAAAAAAAAAAAAAAAEQEBEQAAAAAAAAAAAAAAABEREREAAAAAAAAAAAAAAAARAREBAAAAAAAAAAAAAAAAEREBEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AADwDwAA//8AAPKPAAD//wAA8A8AAP//AADyLwAA//8AAPCPAAD//wAA//8AAP//AAD//wAA" rel="icon" type="image/x-icon">
+      <style>
+        body {
+          background-color: white;
+          color: #222;
+          font-size: 14px;
+          padding: 1em;
+          font-family: 'Overpass Mono', sans-serif;
+          line-height: 1.5em;
+        }
+        @media (min-width: 760px) { body { font-size: 15px } }
+        @media (min-width: 1367px) { body { font-size: 16px } }
+        article { padding: 0; margin: 1em 0; max-width: 860px; }
+        article a { color: #cd3700; }
+        article a:visited { color: #8b2500; }
+        article img { max-width: 100% }
+        article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
+        article blockquote,
+        article pre { margin: 0; border-bottom: 1px solid #DDD; }
+        article pre,
+        article code { background-color: #f4f4f4; border-radius: 3px; font-family: 'Overpass Mono'; font-size: 14px; display: inline-block; color: #333; }
+        article pre { word-break: break-all; width: 100%; }
+        article blockquote :first-of-type { margin-top: 0; }
+        article blockquote :last-of-type { margin-bottom: 0; }
+        article hr { border: 0; border-bottom: 3px solid #CCC; }
+        .heading { font-family: 'Overpass Mono'; }
+        .heading a { text-decoration: none; }
+        .heading .title { max-width: 600px; font-size: 1.4em; color: #222; display: inline-block; text-transform: uppercase; margin: 0 0 1em; font-weight:bold; line-height:1.25em  }
+        .heading .title:hover { text-decoration: underline; }
+        .heading .stamp { color: #999; }
+        .heading .stamp,
+        .home { display: inline-block; width: 2.66em; text-align:right; margin-right: 1.5em; }
+        .home { text-decoration: none; margin-bottom: 1.5em; text-align: left;  color: #cb4b16; } .home:hover { color: #dc322f; }
+        .contents { display: inline-block; max-width: 79ch; vertical-align: top; width: 100%; }
+        .contents :first-child { margin-top: 0; }
+        h1, h2, h3, h4, h5, h6 { font-size: 1.4em; font-weight: bold; text-transform: uppercase; margin: 2em 0 1em; }
+        h3, h4, h5, h6 { font-size: 1.25em; }
+        h4, h5, h6 { font-size: 1em; }
+        ol, ul { padding-left: 1em; }
+        .footnotes { padding: 1em 0 0; font-size: .9em; }
+        .footnotes hr { display: none; }
+        .footnotes ol { padding: 0; }
+        .footnote { vertical-align: super; font-size: .8em; text-decoration: none; line-height: 0; }
+        .tags { border-top: 2px solid #EEE; margin-top: 2.5em; padding-top: 1.5em; font-size: .9em; }
+        .tags a { background-color: #EEE; display:inline-block;padding: 0 .5em;border-radius: 4px; }
+        .wrap { max-width: 1024px; margin: 0 auto; }
+        figure { margin: 0 }
+        .hljs { background-color: #fbfbfb; }
+        table { border-collapse: collapse; }
+        table thead tr th { border-bottom: 2px solid #999; }
+        table tr td { padding: 0 .3em; border-bottom: 1px solid #CCC; }
+        table tr td + td { border-left: 1px solid #CCC; }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <article>
+        <div class="heading"><a href="/blog/post/ffmpeg-for-web-videos.html"><span class="stamp">12/19</span><h1 class="title">FFmpeg for web videos</h1></a></div>
+          <a href="/blog/" class="home">←</a><div class="contents">
+          
+
+<p>Today I found an amazing book/article by Addy Osmani - <a href="https://images.guide">Essential Image Optimizations</a></p>
+
+<p>It talks about image optimisation on the web in great detail.</p>
+
+<p>TIL about: <a href="https://github.com/google/guetzli">Guetzli</a> - a slow perceptual JPEG encoder from Google.</p>
+
+<p>It made me consider again WebP as an alternative for supported browsers, which I should add to my workflow.</p>
+
+<p>Also made me think and experiment with html5 videos:</p>
+
+<h3 id="firstinstallffmpeg">First install ffmpeg</h3>
+
+<p>On Mac OS with <a href="https://brew.sh">homebrew</a> it is as easy as:</p>
+
+<pre><code class="shell">brew install ffmpeg --with-tools --with-libvpx
+
+## or with more stuff:
+brew install ffmpeg --with-ffplay --with-tools --with-x265 --with-faac --with-fdk-aac --with-libvpx --with-libvorbis
+</code></pre>
+
+<p>On any other platform (that I do not use) try to follow the <a href="https://trac.ffmpeg.org/wiki/CompilationGuide">official compilation guide</a>. I would probably first try with <a href="https://www.docker.com">docker</a>: <a href="https://hub.docker.com/r/jrottenberg/ffmpeg/">jrottenberg/ffmpeg</a>, but it could be tricky to run.</p>
+
+<h3 id="mp4-scaledownvideoto720heightand24fps">MP4 - Scale down video to 720 height and 24 fps</h3>
+
+<p>In my case the input file had only video stream, so I didn&#8217;t care about any audio.</p>
+
+<pre><code class="shell">ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 FILENAME-720-24fps-1828k.mp4
+</code></pre>
+
+<h3 id="mp4-sameaspreviousbutaddfade-inoutfor10frames">MP4 - Same as previous but add fade-in/out for 10 frames</h3>
+
+<p>Fading out involves the exact frame from which to begin:</p>
+
+<pre><code class="shell">ffprobe -i FILENAME.mov -count_frames -show_entries stream=nb_frames
+## nb_frames=1728 (in my case)
+</code></pre>
+
+<pre><code class="shell">ffmpeg -y -i FILENAME.mov -c:v libx264 -minrate 1M -b:v 1828K -vf 'scale=-1:720,fade=in:0:10,fade=out:1718:10' -r 24 -preset fast -threads 0 FILENAME-720-24fps-1828k-fadeinout.mp4
+</code></pre>
+
+<h3 id="webmwithsimilarsettingsasmp4butusingtwopasses">WebM with similar settings as MP4, but using two passes</h3>
+
+<p>I followed the details from the page about <a href="https://trac.ffmpeg.org/wiki/Encode/VP8">VP8 encoding</a>.</p>
+
+<pre><code class="shell">ffmpeg -y -i FILENAME.mov -c:v libvpx -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 -pass 1 FILENAME-720-24fps-1828k.webm
+ffmpeg -y -i FILENAME.mov -c:v libvpx -minrate 1M -b:v 1828K -vf 'scale=-1:720' -r 24 -preset fast -threads 0 -pass 2 FILENAME-720-24fps-1828k.webm
+</code></pre>
+
+<p>During the first pass the output WebM file is useless. Some people use <code>-f mp4 /dev/null</code> or <code>-f webm /dev/null</code> which, of course, doesn&#8217;t produce that file. I&#8217;m not really sure if it is necessary, but with no tests I can&#8217;t say much.</p>
+
+<h3 id="makinggiffromthevideo">Making GIF from the video</h3>
+
+<p>I followed the details from the page <a href="http://blog.pkh.me/p/21-high-quality-gif-with-ffmpeg.html">High Quality GIF with FFmpeg</a>.</p>
+
+<p>To keep the output small I decided to go with 320px in width and 10 fps.</p>
+
+<pre><code class="shell">ffmpeg -i FILENAME.mov -vf 'scale=320:-1:sws_dither=ed' -gifflags -transdiff -r 10 -y FILENAME-320-10fps-dither.gif
+</code></pre>
+
+<p>An alternative suggestion was to create a palette first from all frames and use that when encoding the GIF. Apparently you can add the fps setting into the <code>-vf</code> flag.</p>
+
+<pre><code class="shell">ffmpeg -i FILENAME.mov -vf 'fps=10,scale=320:-1:flags=lanczos,palettegen' -y palette.png
+ffmpeg -i FILENAME.mov -i palette.png -lavfi 'fps=10,scale=320:-1:flags=lanczos [x]; [x][1:v] paletteuse' -y FILENAME-320-10fps-long-palette.gif
+</code></pre>
+
+<p>Tags: TIL CLI Web</p>
+          <div class="tags"><a href="/blog/tag/TIL">TIL</a>
+<a href="/blog/tag/CLI">CLI</a>
+<a href="/blog/tag/Web">Web</a></div>
+          </div>
+        </article>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+  </html>
