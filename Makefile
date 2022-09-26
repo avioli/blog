@@ -20,6 +20,15 @@ installed.Darwin:
 	)
 	touch installed.Darwin
 
+installed.Linux:
+	command -v multimarkdown &>/dev/null || brew install multimarkdown
+	command -v jenny &>/dev/null || ( \
+		mkdir -p ~/repos/ ~/bin && \
+		git clone https://github.com/avioli/jenny.git ~/repos/jenny && \
+		cd ~/bin && ln -s ../repos/jenny/jenny . \
+	)
+	touch installed.Linux
+
 .dist:
 	mkdir .dist
 
