@@ -124,7 +124,7 @@ thus we have to take care of that ourselves!
 Following the gude at [Danilo's blog](https://blog.dbrgn.ch/2021/11/16/git-ssh-signatures/)
 I created a file for holding allowed signers:
 
-```
+```sh
 mkdir -p ~/.config/git/
 touch ~/.config/git/allowed_signers
 chmod 0644 ~/.config/git/allowed_signers
@@ -132,7 +132,7 @@ chmod 0644 ~/.config/git/allowed_signers
 
 Then I listed the currently active ssh keys in the `ssh-agent`:
 
-```
+```sh
 > ssh-add -L
 ssh-ed25519 AAAAC3NzaC1...<snip>
 ```
@@ -145,7 +145,7 @@ aviolito@gmail.com ssh-ed25519 AAAAC3NzaC1...<snip>
 
 Finally I configured the `gpg.ssh.allowedSignersFile` config to:
 
-```
+```sh
 git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
 ```
 
