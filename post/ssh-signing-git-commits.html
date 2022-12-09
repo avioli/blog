@@ -1,0 +1,175 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <title>commits - Avioli's den</title>
+      <link href="https://fonts.googleapis.com/css?family=Overpass+Mono:400,700" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/arduino-light.min.css" rel="stylesheet">
+      <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAANjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARERERAAAAAAAAAAAAAAAAEQEBEQAAAAAAAAAAAAAAABEREREAAAAAAAAAAAAAAAARAREBAAAAAAAAAAAAAAAAEREBEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAP//AADwDwAA//8AAPKPAAD//wAA8A8AAP//AADyLwAA//8AAPCPAAD//wAA//8AAP//AAD//wAA" rel="icon" type="image/x-icon">
+      <style>
+        body {
+          background-color: white;
+          color: #222;
+          font-size: 14px;
+          padding: 1em;
+          font-family: 'Overpass Mono', sans-serif;
+          line-height: 1.5em;
+        }
+        @media (min-width: 760px) { body { font-size: 15px } }
+        @media (min-width: 1367px) { body { font-size: 16px } }
+        article { padding: 0; margin: 1em 0; max-width: 860px; }
+        article a { color: #cd3700; }
+        article a:visited { color: #8b2500; }
+        article img { max-width: 100% }
+        article blockquote { border-left: 2px solid #CCC; padding: 1em; border-radius: 3px; background-color: #f4f4f4; }
+        article blockquote,
+        article pre { margin: 0; border-bottom: 1px solid #DDD; }
+        article pre,
+        article code { background-color: #f4f4f4; border-radius: 3px; font-family: 'Overpass Mono'; font-size: 14px; display: inline-block; color: #333; }
+        article pre { word-break: break-all; width: 100%; }
+        article blockquote :first-of-type { margin-top: 0; }
+        article blockquote :last-of-type { margin-bottom: 0; }
+        article hr { border: 0; border-bottom: 3px solid #CCC; }
+        .heading { font-family: 'Overpass Mono'; }
+        .heading a { text-decoration: none; }
+        .heading .title { max-width: 600px; font-size: 1.4em; color: #222; display: inline-block; text-transform: uppercase; margin: 0 0 1em; font-weight:bold; line-height:1.25em  }
+        .heading .title:hover { text-decoration: underline; }
+        .heading .stamp { color: #999; }
+        .heading .stamp,
+        .home { display: inline-block; width: 2.66em; text-align:right; margin-right: 1.5em; }
+        .home { text-decoration: none; margin-bottom: 1.5em; text-align: left;  color: #cb4b16; } .home:hover { color: #dc322f; }
+        .contents { display: inline-block; max-width: 79ch; vertical-align: top; width: 100%; }
+        .contents :first-child { margin-top: 0; }
+        h1, h2, h3, h4, h5, h6 { font-size: 1.4em; font-weight: bold; text-transform: uppercase; margin: 2em 0 1em; }
+        h3, h4, h5, h6 { font-size: 1.25em; }
+        h4, h5, h6 { font-size: 1em; }
+        ol, ul { padding-left: 1em; }
+        .footnotes { padding: 1em 0 0; font-size: .9em; }
+        .footnotes hr { display: none; }
+        .footnotes ol { padding: 0; }
+        .footnote { vertical-align: super; font-size: .8em; text-decoration: none; line-height: 0; }
+        .tags { border-top: 2px solid #EEE; margin-top: 2.5em; padding-top: 1.5em; font-size: .9em; }
+        .tags a { background-color: #EEE; display:inline-block;padding: 0 .5em;border-radius: 4px; }
+        .wrap { max-width: 1024px; margin: 0 auto; }
+        figure { margin: 0 }
+        .hljs { background-color: #fbfbfb; }
+        table { border-collapse: collapse; }
+        table thead tr th { border-bottom: 2px solid #999; }
+        table tr td { padding: 0 .3em; border-bottom: 1px solid #CCC; }
+        table tr td + td { border-left: 1px solid #CCC; }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <article>
+        <div class="heading"><a href="/blog/post/ssh-signing-git-commits.html"><span class="stamp">12/09</span><h1 class="title">commits</h1></a></div>
+          <a href="/blog/" class="home">←</a><div class="contents">
+          
+
+<p>I wanted to sign my commits for some time and tried it a year ago and it didn&#8217;t really work.</p>
+
+<p>&#8230; until 23rd of August 2022 when <a href="">GitHub announced that they will show verified flag for SSH signed commits</a></p>
+
+<p>Today I re-tried - following a GitHub guide over several articles they have and have succeeded.</p>
+
+<h2 id="thesteps">The steps</h2>
+
+<p>TL;DR;</p>
+
+<p>I started with their article about &#8220;<a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">Signing commits</a>&#8221;,
+which led me to &#8220;<a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key#telling-git-about-your-ssh-key">Telling Git about your SSH key</a>&#8221;,
+but then I had to follow the link at the top of the section to &#8220;<a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">Generating a new SSH key and adding it to the ssh-agent</a>&#8221;,
+which led me to follow &#8220;<a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">Adding a new SSH key to your GitHub account</a>&#8221;
+to add a new SSH signing key to my account. Finally I went back to the first
+article where I created a temporary repository, where I signed a few commits and
+confirmed the GitHub was showing the Verified flag.</p>
+
+<p>Now the steps I took…</p>
+
+<h3 id="1.firstthingwastocreateanewed25519signaturehttps:en.wikipedia.orgwikieddsaed25519:">1. First thing was to create a new <a href="https://en.wikipedia.org/wiki/EdDSA#Ed25519">Ed25519 signature</a>:</h3>
+
+<pre><code>ssh-keygen -t ed25519 -C &quot;your_email@your_domain.com.au&quot;
+</code></pre>
+
+<p>At the prompts that followed I picked the default file name and location since I
+had no old Ed25519 key pairs, then put in a pass phrase I wanted, since I was
+going to include it in my macOS keychain.</p>
+
+<p>The <code>ssh-keygen</code> command has generated two new files: <code>~/.ssh/id_ed25519</code> and
+<code>~/.ssh/id_ed25519.pub</code> - a private and public key pair.</p>
+
+<h3 id="2.configuringsshtoloadkeysintothessh-agentwhencommunicatingwithgithub">2. Configuring SSH to load keys into the <code>ssh-agent</code> when communicating with GitHub</h3>
+
+<p>ASIDE: The <code>ssh-agent</code> manages your SSH keys and remembers your pass phrase.</p>
+
+<p>Since the main purpose of signing my commits with an SSH key was to have a
+verified flag on GitHub - I had to add a GitHub-related config to my SSH config
+file at <code>~/.ssh/config</code>.</p>
+
+<pre><code>Host *.github.com
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+</code></pre>
+
+<p>ASIDE: if you don&#8217;t have the <code>~/.ssh/config</code> file - create it (I believe it
+should have 0644 permissions, but I think the ssh agent ensures it
+does automatically).</p>
+
+<p>I use <code>UseKeychain yes</code>, because I&#8217;m going to store the password in my keychain.</p>
+
+<h3 id="3.addingthesshkeytossh-agent">3. Adding the SSH key to ssh-agent</h3>
+
+<p>Since I wanted to add my pass phrase to my macOS keychain I did:</p>
+
+<pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+</code></pre>
+
+<p>ASIDE: If you get an error when you run <code>ssh-add</code> you&#8217;ll have to start the
+<code>ssh-agent</code>, which is trivially done via the command: <code>eval &quot;$(ssh-agent -s)&quot;</code></p>
+
+<h3 id="4.addingmypublickeytogithub">4. Adding my public key to GitHub</h3>
+
+<p>Now I had to add the <code>.pub</code> file to my GitHub account:</p>
+
+<pre><code>pbcopy &lt; ~/.ssh/id_ed25519.pub
+</code></pre>
+
+<p>ASIDE: <code>pbcopy</code> is a built-in macOS utility that simply copies the contents of
+an input into the OS pasteboard (aka clipboard).</p>
+
+<p>I opened <code>github.com</code> in a web browser and visited <a href="https://github.com/settings/keys">my account&#8217;s settings, where under SSH and GPG keys</a>
+I&#8217;ve added the new public signing key with a descriptive name of my choosing.</p>
+
+<h3 id="5.tellinggitaboutthesshkey">5. Telling <code>git</code> about the SSH key</h3>
+
+<p>Finally I had to tell <code>git</code> to use the new key to sign my commits.</p>
+
+<p>Apparently there is an important decision at this time - whether to sign all
+your commits to all repositories OR just particular repository (or several).</p>
+
+<p>I chose to go global, but if you do want to do it for a particular repo -
+<code>cd</code> into it and use <code>--local</code> instead of my <code>--global</code> below.</p>
+
+<pre><code>git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+</code></pre>
+
+<p>Since I want to sign all my commits and didn&#8217;t want to always type
+<code>git commit -S ...</code> I added the oddly named config <code>commit.gpgSign</code>:</p>
+
+<pre><code>git config --global commit.gpgSign true
+</code></pre>
+
+<hr />
+
+<p>(this commit is my first signed one)</p>
+          <div class="tags"></div>
+          </div>
+        </article>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+  </html>
