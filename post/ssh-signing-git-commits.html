@@ -89,7 +89,7 @@ confirmed the GitHub was showing the Verified flag.</p>
 
 <h3 id="1.firstthingwastocreateanewed25519signaturehttps:en.wikipedia.orgwikieddsaed25519:">1. First thing was to create a new <a href="https://en.wikipedia.org/wiki/EdDSA#Ed25519">Ed25519 signature</a>:</h3>
 
-<pre><code>ssh-keygen -t ed25519 -C &quot;your_email@your_domain.com.au&quot;
+<pre><code class="sh">ssh-keygen -t ed25519 -C &quot;your_email@your_domain.com.au&quot;
 </code></pre>
 
 <p>At the prompts that followed I picked the default file name and location since I
@@ -123,7 +123,7 @@ does automatically).</p>
 
 <p>Since I wanted to add my pass phrase to my macOS keychain I did:</p>
 
-<pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+<pre><code class="sh">ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 </code></pre>
 
 <p>ASIDE: If you get an error when you run <code>ssh-add</code> you&#8217;ll have to start the
@@ -133,7 +133,7 @@ does automatically).</p>
 
 <p>Now I had to add the <code>.pub</code> file to my GitHub account:</p>
 
-<pre><code>pbcopy &lt; ~/.ssh/id_ed25519.pub
+<pre><code class="sh">pbcopy &lt; ~/.ssh/id_ed25519.pub
 </code></pre>
 
 <p>ASIDE: <code>pbcopy</code> is a built-in macOS utility that simply copies the contents of
@@ -152,14 +152,14 @@ your commits to all repositories OR just particular repository (or several).</p>
 <p>I chose to go global, but if you do want to do it for a particular repo -
 <code>cd</code> into it and use <code>--local</code> instead of my <code>--global</code> below.</p>
 
-<pre><code>git config --global gpg.format ssh
+<pre><code class="sh">git config --global gpg.format ssh
 git config --global user.signingkey ~/.ssh/id_ed25519.pub
 </code></pre>
 
 <p>Since I want to sign all my commits and didn&#8217;t want to always type
 <code>git commit -S ...</code> I added the oddly named config <code>commit.gpgSign</code>:</p>
 
-<pre><code>git config --global commit.gpgSign true
+<pre><code class="sh">git config --global commit.gpgSign true
 </code></pre>
 
 <hr />
