@@ -177,14 +177,14 @@ thus we have to take care of that ourselves!</p>
 <p>Following the gude at <a href="https://blog.dbrgn.ch/2021/11/16/git-ssh-signatures/">Danilo&#8217;s blog</a>
 I created a file for holding allowed signers:</p>
 
-<pre><code>mkdir -p ~/.config/git/
+<pre><code class="sh">mkdir -p ~/.config/git/
 touch ~/.config/git/allowed_signers
 chmod 0644 ~/.config/git/allowed_signers
 </code></pre>
 
 <p>Then I listed the currently active ssh keys in the <code>ssh-agent</code>:</p>
 
-<pre><code>> ssh-add -L
+<pre><code class="sh">> ssh-add -L
 ssh-ed25519 AAAAC3NzaC1...&lt;snip&gt;
 </code></pre>
 
@@ -195,7 +195,7 @@ ssh-ed25519 AAAAC3NzaC1...&lt;snip&gt;
 
 <p>Finally I configured the <code>gpg.ssh.allowedSignersFile</code> config to:</p>
 
-<pre><code>git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
+<pre><code class="sh">git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
 </code></pre>
 
 <p>Now when I do run <code>git verify-commit HEAD</code> I get:</p>
