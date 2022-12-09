@@ -108,6 +108,56 @@ git config --global commit.gpgSign true
 ```
 
 
+## Verifying SSH signed commits
+
+I found that `git verify-commit HEAD` produced an error:
+
+```
+error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signature verification
+```
+
+Then `git log --show-signature` produced a `No signature` line.
+
+Turns out that in comparisson to GPG - the SSH keys have no "web of trust",
+thus we have to take care of that ourselves!
+
+Following the gude at [Danilo's blog](https://blog.dbrgn.ch/2021/11/16/git-ssh-signatures/)
+I created a file for holding allowed signers:
+
+```
+mkdir -p ~/.config/git/
+touch ~/.config/git/allowed_signers
+chmod 0644 ~/.config/git/allowed_signers
+```
+
+Then I listed the currently active ssh keys in the `ssh-agent`:
+
+```
+> ssh-add -L
+ssh-ed25519 AAAAC3NzaC1...<snip>
+```
+
+Then I added the ed25519 key to that file, but prepending it with my email:
+
+```
+aviolito@gmail.com ssh-ed25519 AAAAC3NzaC1...<snip>
+```
+
+Finally I configured the `gpg.ssh.allowedSignersFile` config to:
+
+```
+git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
+```
+
+Now when I do run `git verify-commit HEAD` I get:
+
+```
+Good "git" signature with ED25519 key SHA256:1ZPNqvANfoJDEaLhELklI64awpfADJ/+dMXNXBiqWtA
+```
+
+(`git log --show-signature` shows the same for every commit it lists).
+
+
 ---
 
 (this commit is my first signed one)
