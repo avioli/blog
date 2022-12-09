@@ -45,4 +45,6 @@ installed.Linux:
 cleanup:
 	rm -rf .dist
 
-deploy: .dist/.git/deployed
+jenny: install
+
+deploy: jenny .dist/.git/deployed
